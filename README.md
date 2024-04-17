@@ -1,0 +1,2 @@
+# smoothies
+A streamlit application.

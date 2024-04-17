@@ -23,15 +23,18 @@ session = cnx.session()
 my_dataframe = session.table("smoothies.public.fruit_options").select(col('FRUIT_NAME'))
 st.dataframe(data=my_dataframe,use_container_width=True )
 
-ingredients_list = st.multiselect("Choose up to 5 ingredients: ", my_dataframe)
+ingredients_list = st.multiselect("Choose up to 5 ingredients: ", my_dataframe, max_selections=5)
 
 if ingredients_list:
     ingredient_string = ", ".join(ingredients_list)
     # st.write(ingredient_string)
-my_insert_stmt = """ insert into smoothies.public.orders(ingredients, name_on_order) 
+    # my_insert_stmt = """ insert into smoothies.public.orders(ingredients) 
+    #                  values('""" + ingredient_string + """') """
+    my_insert_stmt = """ insert into smoothies.public.orders(ingredients, name_on_order) 
                      values('""" + ingredient_string   + """' ,'""" +  name_on_order +"""') """
     time_to_insert = st.button("Submit Order")
-    # st.write(my_insert_stmt)
+    # st.write(my_insert_stmt) 
+    
     if time_to_insert:
         session.sql(my_insert_stmt).collect()
-        st.success(f"Your Smoothie is ordered, {name_on_order}!", icon="✅")
+        st.success('Your Smoothie is ordered!', icon="✅")
